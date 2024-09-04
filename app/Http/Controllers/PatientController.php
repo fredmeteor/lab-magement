@@ -3,82 +3,63 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Patient;
 
 class PatientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $patients = Patient::all();
+        return view('patients.index', compact('patients'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        return view('patients.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'patient_id' => 'required|unique:patients',
+            'name' => 'required|string',
+          
+        ]);
+
+        $patient = Patient::create($request->all());
+
+        return redirect()->route('patients.index')
+                         ->with('success', 'Patient created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show(Patient $patient)
     {
-        //
+        return view('patients.show', compact('patient'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit(Patient $patient)
     {
-        //
+        return view('patients.edit', compact('patient'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, Patient $patient)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+           
+        ]);
+
+        $patient->update($request->all());
+
+        return redirect()->route('patients.index')
+                         ->with('success', 'Patient updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Patient $patient)
     {
-        //
+        $patient->delete();
+
+        return redirect()->route('patients.index')
+                         ->with('success', 'Patient deleted successfully.');
     }
 }

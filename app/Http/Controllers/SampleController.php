@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Sample;
+use App\Models\Patient;
 
 class SampleController extends Controller
 {
@@ -13,7 +15,8 @@ class SampleController extends Controller
      */
     public function index()
     {
-        //
+        $samples = Sample::with('patient')->get();
+        return view('samples.index', compact('samples'));
     }
 
     /**
@@ -23,7 +26,8 @@ class SampleController extends Controller
      */
     public function create()
     {
-        //
+        $patients = Patient::all(); // You'll need patients to assign a sample to
+        return view('samples.create', compact('patients'));
     }
 
     /**
@@ -34,7 +38,20 @@ class SampleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'patient_id' => 'required|exists:patients,id',
+            'sample_type' => 'required|string',
+            'collection_date' => 'required|date',
+            'collected_by' => 'required|string',
+            'status' => 'nullable|string',
+            'location' => 'nullable|integer',
+            'comments' => 'nullable|string',
+        ]);
+
+        $sample = Sample::create($request->all());
+
+        return redirect()->route('samples.index')
+                         ->with('success', 'Sample created successfully.');
     }
 
     /**
@@ -43,9 +60,9 @@ class SampleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Sample $sample)
     {
-        //
+        return view('samples.show', compact('sample'));
     }
 
     /**
@@ -54,10 +71,12 @@ class SampleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Sample $sample)
     {
-        //
+        $patients = Patient::all();
+        return view('samples.edit', compact('sample', 'patients'));
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -66,9 +85,21 @@ class SampleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Sample $sample)
     {
-        //
+        $request->validate([
+            'sample_type' => 'required|string',
+            'collection_date' => 'required|date',
+            'collected_by' => 'required|string',
+            'status' => 'nullable|string',
+            'location' => 'nullable|integer',
+            'comments' => 'nullable|string',
+        ]);
+
+        $sample->update($request->all());
+
+        return redirect()->route('samples.index')
+                         ->with('success', 'Sample updated successfully.');
     }
 
     /**
@@ -77,8 +108,11 @@ class SampleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Sample $sample)
     {
-        //
+        $sample->delete();
+
+        return redirect()->route('samples.index')
+                         ->with('success', 'Sample deleted successfully.');
     }
 }
