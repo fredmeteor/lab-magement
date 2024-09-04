@@ -25,8 +25,7 @@
                 <tr>
                     <td>{{ $patient->patient_id }}</td>
                     <td>{{ $patient->name }}</td>
-                    <td>{{ $patient->dob }}</td>
-                    <td>{{ $patient->contact_info }}</td>
+                   
                     <td>
                         <a href="{{ route('patients.show', $patient->id) }}" class="btn btn-info">View</a>
                         <a href="{{ route('patients.edit', $patient->id) }}" class="btn btn-warning">Edit</a>
