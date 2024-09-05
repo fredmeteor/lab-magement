@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Models\Sample;
 use App\Models\Patient;
@@ -50,8 +50,11 @@ class SampleController extends Controller
 
         $sample = Sample::create($request->all());
 
-        return redirect()->route('samples.index')
-                         ->with('success', 'Sample created successfully.');
+        if ($sample->save()) {
+            return redirect()->route('samples.index')->with('success', 'Sample saved successfully.');
+        } else {
+            return redirect()->route('samples.create')->with('error', 'Failed to save sample.');
+        }
     }
 
     /**

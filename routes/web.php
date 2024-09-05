@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\SampleController;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\StorageLocationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,3 +25,5 @@ Route::resource('samples', SampleController::class);
 Route::resource('tests', TestController::class);
 Route::resource('storage-locations', StorageLocationController::class);
 Route::resource('patients', PatientController::class);
+Route::get('/test', [TestController::class, 'index']);
+Route::get('/storage-locations', [StorageLocationController::class, 'index']);

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Patient;
 
 class Sample extends Model
 {
@@ -16,6 +17,11 @@ class Sample extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class);
+    }
+
+    public function getFormattedSampleIdAttribute()
+    {
+        return sprintf('%06d', $this->id) . '-' . str_replace(' ', '_', $this->patient->name);
     }
 
 }
