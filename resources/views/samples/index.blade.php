@@ -4,7 +4,14 @@
 <div class="container">
     <h2>Samples List</h2>
     <a href="{{ route('samples.create') }}" class="btn btn-primary mb-3">Add New Sample</a>
-    
+     <!-- Search Form -->
+     <form action="{{ route('samples.index') }}" method="GET" class="mb-3">
+        <div class="form-group">
+            <input type="text" name="sample_id" class="form-control" placeholder="Search by Sample ID" value="{{ request()->sample_id }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a href="{{ route('samples.index') }}" class="btn btn-secondary">Clear</a>
+    </form>
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}

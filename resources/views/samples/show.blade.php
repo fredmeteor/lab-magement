@@ -5,7 +5,7 @@
     <h2>Sample Details</h2>
     <div class="form-group">
         <label>Sample ID:</label>
-        <p>{{ $sample->id }}</p>
+        <p>{{ $sample->formatted_sample_id }}</p>
     </div>
     <div class="form-group">
         <label>Patient Name:</label>

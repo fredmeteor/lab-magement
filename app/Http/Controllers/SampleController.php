@@ -13,9 +13,30 @@ class SampleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $samples = Sample::with('patient')->get();
+        $query = Sample::query();
+
+        if ($request->has('sample_id') && $request->sample_id != '') {
+            $inputSampleId = $request->sample_id;
+            
+            // Split the custom_sample_id into the numeric part and the patient's name
+            $sampleIdParts = explode('-', $inputSampleId);
+            $id = intval($sampleIdParts[0]);  // First part is the sample ID (numeric)
+            $patientName = isset($sampleIdParts[1]) ? str_replace('_', ' ', $sampleIdParts[1]) : null;
+    
+            // Query based on the sample ID and optionally the patient name
+            $query->where('id', $id);
+    
+            if ($patientName) {
+                $query->whereHas('patient', function ($query) use ($patientName) {
+                    $query->where('name', 'like', '%' . $patientName . '%');
+                });
+            }
+        }
+    
+        $samples = $query->paginate(5);
+    
         return view('samples.index', compact('samples'));
     }
 
@@ -51,7 +72,10 @@ class SampleController extends Controller
         $sample = Sample::create($request->all());
 
         if ($sample->save()) {
-            return redirect()->route('samples.index')->with('success', 'Sample saved successfully.');
+            return redirect()->route('samples.create')->with([
+                'success' => 'Sample saved successfully!',
+                'custom_sample_id' => $sample->formatted_sample_id,
+            ]);
         } else {
             return redirect()->route('samples.create')->with('error', 'Failed to save sample.');
         }
