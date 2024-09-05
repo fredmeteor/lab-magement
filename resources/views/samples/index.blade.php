@@ -11,21 +11,22 @@
         </div>
     @endif
 
-    <table class="table table-bordered">
+    @if($samples->count())
+    <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th>Sample ID</th>
-                <th>Patient Name</th>
-                <th>Sample Type</th>
-                <th>Collection Date</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th scope="col">Sample ID</th>
+                <th scope="col">Patient Name</th>
+                <th scope="col">Sample Type</th>
+                <th scope="col">Collection Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($samples as $sample)
                 <tr>
-                    <td>{{ $sample->id }}</td>
+                    <td>{{ $sample->formatted_sample_id }}</td>
                     <td>{{ $sample->patient->name }}</td>
                     <td>{{ $sample->sample_type }}</td>
                     <td>{{ $sample->collection_date }}</td>
@@ -43,5 +44,8 @@
             @endforeach
         </tbody>
     </table>
+    @else
+    <p>No samples found.</p>
+@endif
 </div>
 @endsection
