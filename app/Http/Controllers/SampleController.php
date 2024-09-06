@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Models\Sample;
 use App\Models\Patient;
+use App\Models\Test;
 
 class SampleController extends Controller
 {
@@ -35,7 +36,7 @@ class SampleController extends Controller
             }
         }
     
-        $samples = $query->paginate(5);
+        $samples = $query->paginate(10);
     
         return view('samples.index', compact('samples'));
     }
@@ -67,18 +68,26 @@ class SampleController extends Controller
             'status' => 'nullable|string',
             'location' => 'nullable|integer',
             'comments' => 'nullable|string',
+            'tests.*.test_name' => 'required|string',  // Validate each test name
+            'tests.*.test_date' => 'required|date',    // Validate each test date
         ]);
 
         $sample = Sample::create($request->all());
 
-        if ($sample->save()) {
-            return redirect()->route('samples.create')->with([
-                'success' => 'Sample saved successfully!',
-                'custom_sample_id' => $sample->formatted_sample_id,
+         // Add multiple tests to the sample
+         foreach ($request->input('tests') as $testData) {
+            $sample->tests()->create([
+                'test_name' => $testData['test_name'],
+                'test_date' => $testData['test_date'],
+                'status' => 'Pending',
+                'technician_id' => $testData['technician_id'] ?? null,
             ]);
-        } else {
-            return redirect()->route('samples.create')->with('error', 'Failed to save sample.');
         }
+
+        return redirect()->route('samples.create')->with([
+            'success' => 'Sample and tests saved successfully!',
+            'custom_sample_id' => $sample->formatted_sample_id,
+        ]);
     }
 
     /**

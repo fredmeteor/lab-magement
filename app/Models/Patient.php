@@ -14,7 +14,7 @@ class Patient extends Model
 
     
     protected $fillable = [
-        'patient_id', 'name' 
+        'name',
     ];
 
     public function samples()

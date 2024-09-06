@@ -20,16 +20,19 @@ class PatientController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'patient_id' => 'required|unique:patients',
-            'name' => 'required|string',
-          
-        ]);
-
-        $patient = Patient::create($request->all());
-
-        return redirect()->route('patients.index')
-                         ->with('success', 'Patient created successfully.');
+        
+         // Validate the incoming request
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'patient_id' => 'required|exists:patients,id',
+        
+    ]);
+    // Create the patient - the patient_id is auto-generated
+    $patient = Patient::create($validatedData);
+        
+    // Optionally, redirect with a success message
+    return redirect()->route('patients.create')->with('success', 'Patient created successfully with ID: ' . $patient->id);
+    
     }
 
     public function show(Patient $patient)

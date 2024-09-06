@@ -19,6 +19,11 @@ class Sample extends Model
         return $this->belongsTo(Patient::class);
     }
 
+    public function tests()
+    {
+        return $this->hasMany(Test::class);
+    }
+    
     public function getFormattedSampleIdAttribute()
     {
         return sprintf('%06d', $this->id) . '-' . str_replace(' ', '_', $this->patient->name);
