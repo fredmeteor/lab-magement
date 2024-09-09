@@ -37,6 +37,8 @@
                 </table>
             </div>
         </div>
+        <a href="{{ route('samples.generatePdf', $sample->id) }}" class="btn btn-primary">Download PDF</a>
+
         <h4 class="bg bg-primary text-white">Tests Performed:</h4>
         @if ($sample->tests->count())
             <table class="table table-bordered">

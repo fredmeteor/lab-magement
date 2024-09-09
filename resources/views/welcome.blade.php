@@ -2,6 +2,6 @@
 @section('title', 'Home Page - Lab Management System')
 @section('content')
     <div class="text-center">
-        Welcome to the application
+        Welcome to TBLIS Labaratory Management System
     </div>
 @endsection

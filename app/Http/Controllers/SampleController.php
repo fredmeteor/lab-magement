@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Sample;
 use App\Models\Patient;
 use App\Models\Test;
-
+use PDF;
 class SampleController extends Controller
 {
     /**
@@ -14,6 +14,16 @@ class SampleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+      // Show all patients, samples, and tests
+    //   public function indexall()
+    //   {
+    //       // Load all patients along with their samples and tests
+    //       $patients = Patient::with('samples.tests')->get();
+  
+    //       // Pass the data to the view
+    //       return view('samples.index-all', compact('patients'));
+    //   }
+
     public function index(Request $request)
     {
         $query = Sample::query();
@@ -151,4 +161,27 @@ class SampleController extends Controller
         return redirect()->route('samples.index')
                          ->with('success', 'Sample deleted successfully.');
     }
+
+    // Method to generate the PDF
+    public function generatePdf(Sample $sample)
+    {
+        // Load the view and pass the sample data
+        $pdf = PDF::loadView('pdf.sample-details', compact('sample'));
+
+        // Stream the PDF directly in the browser or download it
+        return $pdf->download('sample-report-' . $sample->formatted_sample_id . '.pdf');
+    }
+
+    // Generate a PDF report of all patients, samples, and tests
+    // public function generateAllPdf()
+    // {
+    //     // Load all patients with their samples and tests
+    //     $patients = Patient::with('samples.tests')->get();
+
+    //     // Load the PDF view and pass the data
+    //     $pdf = PDF::loadView('pdf.all-samples', compact('patients'));
+
+    //     // Return the PDF as a downloadable file
+    //     return $pdf->download('all-samples-report.pdf');
+    // }
 }

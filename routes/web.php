@@ -27,3 +27,6 @@ Route::resource('storage-locations', StorageLocationController::class);
 Route::resource('patients', PatientController::class);
 Route::get('/test', [TestController::class, 'index']);
 Route::get('/storage-locations', [StorageLocationController::class, 'index']);
+Route::get('samples/{sample}/pdf', [SampleController::class, 'generatePdf'])->name('samples.generatePdf');
+Route::get('samples', [SampleController::class, 'index'])->name('samples.index');
+Route::get('samples/all-pdf', [SampleController::class, 'generateAllPdf'])->name('samples.allPdf');

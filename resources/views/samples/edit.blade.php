@@ -44,6 +44,7 @@
                 <label for="comments">Comments</label>
                 <textarea name="comments" class="form-control">{{ $sample->comments }}</textarea>
             </div>
+            
             <button type="submit" class="btn btn-primary">Update</button>
         </form>
     </div>
